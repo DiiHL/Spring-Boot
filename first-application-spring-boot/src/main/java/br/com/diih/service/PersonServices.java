@@ -7,13 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @Service
 public class PersonServices {
-    private final AtomicLong counter = new AtomicLong();
-
     private final Logger logger = Logger.getLogger(PersonServices.class.getName());
 
     @Autowired
@@ -36,7 +33,7 @@ public class PersonServices {
 
     public Person update(Person person) {
         logger.info("Updating one Person!");
-        Person entity = personRepository.findById(person.getId()).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
+        Person entity = findById(person.getId());
 
         entity.setFirstName(person.getFirstName());
         entity.setLastName(person.getLastName());
@@ -49,7 +46,6 @@ public class PersonServices {
     public void delete(Long id) {
         logger.info("Deleting one Person!");
         Person entity = personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
-
         personRepository.delete(entity);
     }
 }
