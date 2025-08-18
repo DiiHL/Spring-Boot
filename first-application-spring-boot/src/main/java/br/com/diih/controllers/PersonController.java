@@ -1,7 +1,7 @@
 package br.com.diih.controllers;
 
 import br.com.diih.model.Person;
-import br.com.diih.request.converts.PersonServices;
+import br.com.diih.service.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package br.com.diih.request.converts;
+package br.com.diih.service;
 
 import br.com.diih.model.Person;
 import org.springframework.stereotype.Service;
