@@ -1,5 +1,6 @@
 package br.com.diih.service;
 
+import br.com.diih.data.dto.PersonDTO;
 import br.com.diih.exceptions.ResourceNotFoundException;
 import br.com.diih.model.Person;
 import br.com.diih.repository.PersonRepository;
@@ -10,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static br.com.diih.mapper.ObjectMapper.parseListObjects;
+import static br.com.diih.mapper.ObjectMapper.parseObject;
+
 @Service
 public class PersonServices {
     private final Logger logger = LoggerFactory.getLogger(PersonServices.class.getName());
@@ -17,36 +21,37 @@ public class PersonServices {
     @Autowired
     PersonRepository personRepository;
 
-    public List<Person> findByAll() {
-        return personRepository.findAll();
+    public List<PersonDTO> findByAll() {
+        return parseListObjects(personRepository.findAll(), PersonDTO.class);
     }
 
-    public Person findById(Long id) {
+    public PersonDTO findById(Long id) {
         logger.info("Finding person by Id!");
-        return personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
+        Person person = personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
+        return parseObject(person, PersonDTO.class);
     }
 
-    public Person create(Person person) {
+    public PersonDTO create(PersonDTO person) {
         logger.info("Creating one Person!");
-
-        return personRepository.save(person);
+        Person entity = parseObject(person, Person.class);
+        return parseObject(personRepository.save(entity), PersonDTO.class);
     }
 
-    public Person update(Person person) {
+    public PersonDTO update(PersonDTO person) {
         logger.info("Updating one Person!");
-        Person entity = findById(person.getId());
+        Person entity = personRepository.findById(person.getId()).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
 
         entity.setFirstName(person.getFirstName());
         entity.setLastName(person.getLastName());
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        return personRepository.save(person);
+        return parseObject(personRepository.save(entity), PersonDTO.class);
     }
 
     public void delete(Long id) {
         logger.info("Deleting one Person!");
-        Person entity = personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
-        personRepository.delete(entity);
+        Person person = personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
+        personRepository.delete(person);
     }
 }
