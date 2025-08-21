@@ -1,7 +1,9 @@
 package br.com.diih.service;
 
-import br.com.diih.data.dto.PersonDTO;
+import br.com.diih.data.dto.v1.PersonDTO;
+import br.com.diih.data.dto.v2.PersonDTOV2;
 import br.com.diih.exceptions.ResourceNotFoundException;
+import br.com.diih.mapper.custom.PersonMapper;
 import br.com.diih.model.Person;
 import br.com.diih.repository.PersonRepository;
 import org.slf4j.Logger;
@@ -20,6 +22,8 @@ public class PersonServices {
 
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    PersonMapper converter;
 
     public List<PersonDTO> findByAll() {
         return parseListObjects(personRepository.findAll(), PersonDTO.class);
@@ -53,5 +57,12 @@ public class PersonServices {
         logger.info("Deleting one Person!");
         Person person = personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
         personRepository.delete(person);
+    }
+
+    // v2
+    public PersonDTOV2 create(PersonDTOV2 person) {
+        logger.info("Creating one Person V2!");
+        Person entity = converter.convertDTOToEntity(person);
+        return converter.convertEntityToDTO(personRepository.save(entity));
     }
 }

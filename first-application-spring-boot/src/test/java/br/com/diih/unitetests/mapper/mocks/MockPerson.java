@@ -3,7 +3,7 @@ package br.com.diih.unitetests.mapper.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.diih.data.dto.PersonDTO;
+import br.com.diih.data.dto.v1.PersonDTO;
 import br.com.diih.model.Person;
 
 public class MockPerson {
