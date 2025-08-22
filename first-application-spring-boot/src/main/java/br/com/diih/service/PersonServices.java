@@ -22,8 +22,6 @@ public class PersonServices {
 
     @Autowired
     PersonRepository personRepository;
-    @Autowired
-    PersonMapper converter;
 
     public List<PersonDTO> findByAll() {
         return parseListObjects(personRepository.findAll(), PersonDTO.class);
@@ -60,9 +58,9 @@ public class PersonServices {
     }
 
     // v2
-    public PersonDTOV2 create(PersonDTOV2 person) {
-        logger.info("Creating one Person V2!");
-        Person entity = converter.convertDTOToEntity(person);
-        return converter.convertEntityToDTO(personRepository.save(entity));
-    }
+//    public PersonDTOV2 create(PersonDTOV2 person) {
+//        logger.info("Creating one Person V2!");
+//        Person entity = converter.convertDTOToEntity(person);
+//        return converter.convertEntityToDTO(personRepository.save(entity));
+//    }
 }
