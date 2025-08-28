@@ -1,9 +1,8 @@
 package br.com.diih.service;
 
+import br.com.diih.controllers.PersonController;
 import br.com.diih.data.dto.v1.PersonDTO;
-import br.com.diih.data.dto.v2.PersonDTOV2;
 import br.com.diih.exceptions.ResourceNotFoundException;
-import br.com.diih.mapper.custom.PersonMapper;
 import br.com.diih.model.Person;
 import br.com.diih.repository.PersonRepository;
 import org.slf4j.Logger;
@@ -15,6 +14,8 @@ import java.util.List;
 
 import static br.com.diih.mapper.ObjectMapper.parseListObjects;
 import static br.com.diih.mapper.ObjectMapper.parseObject;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class PersonServices {
@@ -30,7 +31,9 @@ public class PersonServices {
     public PersonDTO findById(Long id) {
         logger.info("Finding person by Id!");
         Person person = personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
-        return parseObject(person, PersonDTO.class);
+        PersonDTO dto = parseObject(person, PersonDTO.class);
+        addHateoasLink(id, dto);
+        return dto;
     }
 
     public PersonDTO create(PersonDTO person) {
@@ -57,10 +60,18 @@ public class PersonServices {
         personRepository.delete(person);
     }
 
+    private static void addHateoasLink(Long id, PersonDTO dto) {
+        dto.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).findByAll()).withRel("FindAll").withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("Create").withType("POST"));
+        dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("Update").withType("PUT"));
+        dto.add(linkTo(methodOn(PersonController.class).delete(id)).withRel("Delete").withType("DELETE"));
+    }
+
     // v2
-//    public PersonDTOV2 create(PersonDTOV2 person) {
+/*    public PersonDTOV2 create(PersonDTOV2 person) {
 //        logger.info("Creating one Person V2!");
 //        Person entity = converter.convertDTOToEntity(person);
 //        return converter.convertEntityToDTO(personRepository.save(entity));
-//    }
+}*/
 }
