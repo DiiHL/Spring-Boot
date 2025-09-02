@@ -46,7 +46,7 @@ public class PersonController {
                     MediaType.APPLICATION_YAML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE})
     public PersonDTO create(@RequestBody PersonDTO person) {
-        return personServices.  create(person);
+        return personServices.create(person);
     }
 
 //    @PostMapping(value = "/v2",
