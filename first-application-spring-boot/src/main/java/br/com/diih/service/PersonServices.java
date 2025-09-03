@@ -2,6 +2,7 @@ package br.com.diih.service;
 
 import br.com.diih.controllers.PersonController;
 import br.com.diih.data.dto.v1.PersonDTO;
+import br.com.diih.exceptions.RequiredObjectNullException;
 import br.com.diih.exceptions.ResourceNotFoundException;
 import br.com.diih.model.Person;
 import br.com.diih.repository.PersonRepository;
@@ -40,6 +41,8 @@ public class PersonServices {
     }
 
     public PersonDTO create(PersonDTO person) {
+        if (person == null) throw new RequiredObjectNullException();
+
         logger.info("Creating one Person!");
         Person entity = parseObject(person, Person.class);
         PersonDTO dto = parseObject(personRepository.save(entity), PersonDTO.class);
@@ -48,6 +51,8 @@ public class PersonServices {
     }
 
     public PersonDTO update(PersonDTO person) {
+        if (person == null) throw new RequiredObjectNullException();
+
         logger.info("Updating one Person!");
         Person entity = personRepository.findById(person.getId()).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
 
