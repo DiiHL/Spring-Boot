@@ -33,7 +33,7 @@ public class ObjectMapperTests {
     @Test
     public void parseEntityListToDTOListTest() {
         List<PersonDTO> outputList = parseListObjects(inputObject.mockEntityList(), PersonDTO.class);
-        PersonDTO outputZero = outputList.get(0);
+        PersonDTO outputZero = outputList.getFirst();
 
         assertEquals(Long.valueOf(0L), outputZero.getId());
         assertEquals("First Name Test0", outputZero.getFirstName());
