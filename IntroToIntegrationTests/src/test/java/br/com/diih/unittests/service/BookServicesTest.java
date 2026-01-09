@@ -1,11 +1,11 @@
-package br.com.diih.service;
+package br.com.diih.unittests.service;
 
 import br.com.diih.data.dto.v1.BookDTO;
 import br.com.diih.exceptions.RequiredObjectNullException;
 import br.com.diih.exceptions.ResourceNotFoundException;
 import br.com.diih.model.Book;
 import br.com.diih.repository.BookRepository;
-import br.com.diih.unitetests.mapper.mocks.MockBook;
+import br.com.diih.unittests.mapper.mocks.MockBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package br.com.diih.unitetests.mapper.mocks;
+package br.com.diih.unittests.mapper.mocks;
 
 import br.com.diih.data.dto.v1.BookDTO;
 import br.com.diih.model.Book;

@@ -3,7 +3,7 @@ package br.com.diih.controllers;
 
 import br.com.diih.controllers.docs.BookControllerDocs;
 import br.com.diih.data.dto.v1.BookDTO;
-import br.com.diih.service.BookServices;
+import br.com.diih.unittests.service.BookServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
