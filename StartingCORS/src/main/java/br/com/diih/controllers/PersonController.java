@@ -28,7 +28,7 @@ public class PersonController implements PersonControllerDocs {
         return personServices.findByAll();
     }
 
-    @CrossOrigin(origins = {"localhost:8080", "https://erudio.com.br"})
+//    @CrossOrigin(origins = {"localhost:8080", "https://erudio.com.br"})
     @GetMapping(value = "/{id}",
             produces = {
                     MediaType.APPLICATION_JSON_VALUE,
@@ -39,7 +39,7 @@ public class PersonController implements PersonControllerDocs {
         return personServices.findById(id);
     }
 
-    @CrossOrigin(origins = {"localhost:8080"})
+//    @CrossOrigin(origins = {"localhost:8080"})
     @PostMapping(consumes = {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
