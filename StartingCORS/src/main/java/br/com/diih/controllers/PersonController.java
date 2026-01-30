@@ -2,7 +2,7 @@ package br.com.diih.controllers;
 
 import br.com.diih.controllers.docs.PersonControllerDocs;
 import br.com.diih.data.dto.v1.PersonDTO;
-import br.com.diih.unittests.service.PersonServices;
+import br.com.diih.service.PersonServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

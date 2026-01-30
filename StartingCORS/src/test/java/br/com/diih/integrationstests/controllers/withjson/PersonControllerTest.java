@@ -7,6 +7,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.filter.log.LogDetail;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,8 +26,8 @@ class PersonControllerTest extends AbstractIntegrationTest {
     private static ObjectMapper objectmapper;
     private static PersonDTO personDTO;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         objectmapper = new ObjectMapper();
         objectmapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         personDTO = new PersonDTO();
@@ -38,6 +41,8 @@ class PersonControllerTest extends AbstractIntegrationTest {
                 .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
                 .setBasePath("/api/person/v1")
                 .setPort(TestConfigs.SERVER_PORT)
+                    .addFilter(new RequestLoggingFilter(LogDetail.ALL))
+                    .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
                 .build();
 
         String content = given(specification)
@@ -67,11 +72,28 @@ class PersonControllerTest extends AbstractIntegrationTest {
         assertEquals("Male", createdPerson.getGender());
     }
 
-    private void mockPerson() {
-        personDTO.setFirstName("FirstName");
-        personDTO.setLastName("LastName");
-        personDTO.setAddress("Some Address 123");
-        personDTO.setGender("Male");
+    @Test
+    @Order(2)
+    void createWithWrongOrigin() throws JsonProcessingException {
+        mockPerson();
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERROR)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .build();
+
+        String content = given(specification)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(personDTO)
+                .when()
+                .post()
+                .then()
+                .statusCode(403)
+                .extract()
+                .body()
+                .asString();
+
+        assertEquals("Invalid CORS request", content);
     }
 
     @Test
@@ -79,14 +101,63 @@ class PersonControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void findById() {
+    @Order(3)
+    void findById() throws JsonProcessingException {
+        mockPerson();
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCALHOST)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .build();
+
+        String content = given(specification)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .pathParam("id", personDTO.getId())
+                .when()
+                .get("{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+
+        PersonDTO getPerson = objectmapper.readValue(content, PersonDTO.class);
+        personDTO = getPerson;
+
+        assertEquals("FirstName", getPerson.getFirstName());
+        assertEquals("LastName", getPerson.getLastName());
+        assertEquals("Some Address 123", getPerson.getAddress());
+        assertEquals("Male", getPerson.getGender());
     }
 
     @Test
-    void update() {
+    @Order(4)
+    void findByIdWithWrongOrigin() throws JsonProcessingException {
+        mockPerson();
+        specification = new RequestSpecBuilder()
+                .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_ERROR)
+                .setBasePath("/api/person/v1")
+                .setPort(TestConfigs.SERVER_PORT)
+                .build();
+
+        String content = given(specification)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .pathParam("id", personDTO.getId())
+                .when()
+                .get("{id}")
+                .then()
+                .statusCode(403)
+                .extract()
+                .body()
+                .asString();
+
+        assertEquals("Invalid CORS request", content);
     }
 
-    @Test
-    void delete() {
+    private void mockPerson() {
+        personDTO.setFirstName("FirstName");
+        personDTO.setLastName("LastName");
+        personDTO.setAddress("Some Address 123");
+        personDTO.setGender("Male");
     }
 }
