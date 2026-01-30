@@ -1,4 +1,4 @@
-package br.com.diih.unittests.service;
+package br.com.diih.service;
 
 import br.com.diih.controllers.PersonController;
 import br.com.diih.data.dto.v1.PersonDTO;
@@ -6,6 +6,7 @@ import br.com.diih.exceptions.RequiredObjectNullException;
 import br.com.diih.exceptions.ResourceNotFoundException;
 import br.com.diih.model.Person;
 import br.com.diih.repository.PersonRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,11 +73,24 @@ public class PersonServices {
         personRepository.delete(person);
     }
 
+    @Transactional
+    public PersonDTO disablePerson(Long id) {
+        logger.info("Disabling one Person!");
+        personRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Record found for this ID"));
+        personRepository.disablePerson(id);
+
+        Person entity = personRepository.findById(id).get();
+        PersonDTO personDTO = parseObject(entity, PersonDTO.class);
+        addHateoasLink(personDTO);
+        return personDTO;
+    }
+
     private void addHateoasLink( PersonDTO dto) {
         dto.add(linkTo(methodOn(PersonController.class).findById(dto.getId())).withSelfRel().withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).findByAll()).withRel("FindAll").withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("Create").withType("POST"));
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("Update").withType("PUT"));
+        dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getId())).withRel("Disable").withType("PATCH"));
         dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("Delete").withType("DELETE"));
     }
 

@@ -1,4 +1,4 @@
-package br.com.diih.unittests.service;
+package br.com.diih.service;
 
 import br.com.diih.controllers.BookController;
 import br.com.diih.data.dto.v1.BookDTO;
