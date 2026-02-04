@@ -2,7 +2,7 @@ package br.com.diih.controllers;
 
 import br.com.diih.controllers.docs.PersonControllerDocs;
 import br.com.diih.data.dto.v1.PersonDTO;
-import br.com.diih.unittests.service.PersonServices;
+import br.com.diih.service.PersonServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,7 +28,7 @@ public class PersonController implements PersonControllerDocs {
         return personServices.findByAll();
     }
 
-//    @CrossOrigin(origins = {"localhost:8080", "https://erudio.com.br"})
+    //    @CrossOrigin(origins = {"localhost:8080", "https://erudio.com.br"})
     @GetMapping(value = "/{id}",
             produces = {
                     MediaType.APPLICATION_JSON_VALUE,
@@ -39,7 +39,7 @@ public class PersonController implements PersonControllerDocs {
         return personServices.findById(id);
     }
 
-//    @CrossOrigin(origins = {"localhost:8080"})
+    //    @CrossOrigin(origins = {"localhost:8080"})
     @PostMapping(consumes = {
             MediaType.APPLICATION_JSON_VALUE,
             MediaType.APPLICATION_XML_VALUE,
@@ -71,5 +71,15 @@ public class PersonController implements PersonControllerDocs {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         personServices.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(value = "/{id}/disable",
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE})
+    @Override
+    public PersonDTO disablePerson(@PathVariable("id") Long id) {
+        return personServices.disablePerson(id);
     }
 }
