@@ -6,6 +6,6 @@ public interface TestConfigs {
     String HEADER_PARAM_AUTHORIZATION = "Authorization";
     String HEADER_PARAM_ORIGIN = "Origin";
 
-    String ORIGIN_LOCALHOST = "https://localhost:3000";
+    String ORIGIN_LOCALHOST = "http://localhost:8080";
     String ORIGIN_ERROR = "https://localhost:3333";
 }
