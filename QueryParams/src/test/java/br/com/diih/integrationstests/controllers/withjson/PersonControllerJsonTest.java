@@ -2,6 +2,7 @@ package br.com.diih.integrationstests.controllers.withjson;
 
 import br.com.diih.config.TestConfigs;
 import br.com.diih.integrationstests.dto.PersonDTO;
+import br.com.diih.integrationstests.dto.WrapperPersonDTO;
 import br.com.diih.integrationstests.testcontainers.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -167,8 +168,8 @@ class PersonControllerJsonTest extends AbstractIntegrationTest {
                 .body()
                 .asString();
 
-        List<PersonDTO> people = objectmapper.readValue(content, new TypeReference<List<PersonDTO>>() {
-        });
+        WrapperPersonDTO wrapper = objectmapper.readValue(content, WrapperPersonDTO.class);
+        List<PersonDTO> people =  wrapper.getEmbedded().getPersons();
 
         PersonDTO personOne = people.getFirst();
 

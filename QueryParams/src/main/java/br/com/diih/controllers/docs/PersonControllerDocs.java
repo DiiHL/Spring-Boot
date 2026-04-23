@@ -6,11 +6,15 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.websocket.server.PathParam;
+import org.springframework.data.domain.Page;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 public interface PersonControllerDocs {
     @Operation(summary = "Find all People", description = "Finds all People",
@@ -28,7 +32,31 @@ public interface PersonControllerDocs {
                     @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Server error", responseCode = "500", content = @Content)
             })
-    List<PersonDTO> findByAll();
+    ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findByAll(
+        @RequestParam(value = "page", defaultValue = "0") Integer page,
+        @RequestParam(value = "size", defaultValue = "12") Integer size,
+        @RequestParam(value = "direction", defaultValue = "asc") String direction);
+
+    @Operation(summary = "Find People by Username", description = "Find people by their username",
+    tags = {"People"},
+            responses = {@ApiResponse(
+                    description = "Success",
+                    responseCode = "200",
+                    content = {
+                            @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = PersonDTO.class)))
+                    }),
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Server error", responseCode = "500", content = @Content
+            )}
+    )
+    ResponseEntity<PagedModel<EntityModel<PersonDTO>>> findPeopleByUsername(
+            @PathVariable("firstName") String firstName,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "12") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction);
 
     @Operation(summary = "Find a Person", description = "Find a specific Person by your ID",
             tags = {"People"},

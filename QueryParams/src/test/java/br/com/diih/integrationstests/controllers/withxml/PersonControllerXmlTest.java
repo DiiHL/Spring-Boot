@@ -185,19 +185,19 @@ class PersonControllerXmlTest extends AbstractIntegrationTest {
         PersonDTO personOne = people.getFirst();
 
         assertTrue(personOne.getId() > 0);
-        assertEquals("Ayrton", personOne.getFirstName());
-        assertEquals("Senna", personOne.getLastName());
-        assertEquals("São Paulo - Brasil", personOne.getAddress());
-        assertEquals("Male", personOne.getGender());
-        assertTrue(personOne.getEnabled());
+        assertEquals("Aaren", personOne.getFirstName());
+        assertEquals("Gilcriest", personOne.getLastName());
+        assertEquals("Room 872", personOne.getAddress());
+        assertEquals("Female", personOne.getGender());
+        assertFalse(personOne.getEnabled());
 
         PersonDTO personFour = people.get(4);
 
         assertTrue(personFour.getId() > 0);
-        assertEquals("Muhamamd", personFour.getFirstName());
-        assertEquals("Ali", personFour.getLastName());
-        assertEquals("Kentucky - US", personFour.getAddress());
-        assertEquals("Male", personFour.getGender());
+        assertEquals("Aarika", personFour.getFirstName());
+        assertEquals("Silley", personFour.getLastName());
+        assertEquals("PO Box 13426", personFour.getAddress());
+        assertEquals("Female", personFour.getGender());
         assertTrue(personFour.getEnabled());
     }
 
