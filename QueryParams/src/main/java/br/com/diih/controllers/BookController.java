@@ -6,11 +6,14 @@ import br.com.diih.data.dto.v1.BookDTO;
 import br.com.diih.service.BookServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/book/v1")
@@ -25,8 +28,21 @@ public class BookController implements BookControllerDocs {
             MediaType.APPLICATION_YAML_VALUE
     })
     @Override
-    public List<BookDTO> findByAll() {
-        return bookServices.findByAll();
+    public ResponseEntity<PagedModel<EntityModel<BookDTO>>> findByAll(Pageable pageable) {
+
+        return ResponseEntity.ok(bookServices.findByAll(pageable));
+    }
+
+    @GetMapping(value = "/findByTitle",
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE,
+                    MediaType.APPLICATION_XML_VALUE,
+                    MediaType.APPLICATION_YAML_VALUE
+            }
+    )
+    @Override
+    public ResponseEntity<PagedModel<EntityModel<BookDTO>>> findByTitle(@RequestParam String title, Pageable pageable) {
+    return ResponseEntity.ok(bookServices.findByTitle(title, pageable));
     }
 
     @GetMapping(value = "/{id}",
