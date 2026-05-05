@@ -58,7 +58,7 @@ public class FileStorageService {
 
     public Resource loadFileAsResource(String filename){
         try{
-            Path filePath = this.fileStorageLocation.resolve(filename).normalize();
+                Path filePath = this.fileStorageLocation.resolve(filename).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) {
                 return resource;
